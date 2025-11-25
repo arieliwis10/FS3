@@ -2,7 +2,9 @@ package com.example.demo.lab.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * ===============================================================
@@ -12,6 +14,8 @@ import lombok.Data;
  * ===============================================================
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
     name = "TIPO_ANALISIS",

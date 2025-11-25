@@ -48,7 +48,7 @@ public class CorsConfig {
                         .allowedOrigins("*")
 
                         // 3️⃣ Métodos HTTP permitidos
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
 
                         // 4️⃣ Cabeceras permitidas
                         .allowedHeaders("*")
