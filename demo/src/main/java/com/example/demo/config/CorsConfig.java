@@ -45,7 +45,7 @@ public class CorsConfig {
 
                         // 2️⃣ Se permite el acceso desde cualquier origen
                         // (útil mientras desarrollamos; luego se puede restringir)
-                        .allowedOrigins("*")
+                        .allowedOrigins("http://localhost:4200")
 
                         // 3️⃣ Métodos HTTP permitidos
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
@@ -55,7 +55,7 @@ public class CorsConfig {
 
                         // 5️⃣ Si fuera necesario, permitir el envío de credenciales (cookies, tokens,
                         // etc.)
-                        .allowCredentials(false);
+                        .allowCredentials(true);
             }
         };
     }
