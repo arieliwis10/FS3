@@ -1,5 +1,7 @@
 package com.example.demo.usuario.controller;
 
+import com.example.demo.usuario.dto.ActualizacionPerfilRequest;
+import com.example.demo.usuario.dto.CambioRolRequest;
 import com.example.demo.usuario.model.Usuario;
 import com.example.demo.usuario.service.UsuarioService;
 import jakarta.validation.Valid; // Semana 2 → activa Bean Validation
@@ -78,6 +80,28 @@ public class UsuarioController {
             @Valid @RequestBody Usuario usuario) {
         log.info("✏️ [PUT] Actualizar usuario ID: {}", id);
         return ResponseEntity.ok(service.actualizar(id, usuario));
+    }
+
+    /**
+     * PATCH /api/usuarios/{id}/perfil
+     * Actualiza datos visibles del perfil (nombre, email, teléfono).
+     */
+    @PatchMapping("/{id}/perfil")
+    public ResponseEntity<Usuario> actualizarPerfil(@PathVariable Long id,
+            @Valid @RequestBody ActualizacionPerfilRequest request) {
+        log.info("👤 [PATCH] Actualizar perfil usuario ID: {}", id);
+        return ResponseEntity.ok(service.actualizarPerfil(id, request));
+    }
+
+    /**
+     * PATCH /api/usuarios/{id}/rol
+     * Asigna o cambia el rol del usuario (ADMIN | ANALISTA).
+     */
+    @PatchMapping("/{id}/rol")
+    public ResponseEntity<Usuario> actualizarRol(@PathVariable Long id,
+            @Valid @RequestBody CambioRolRequest request) {
+        log.info("🛡️ [PATCH] Actualizar rol usuario ID: {}", id);
+        return ResponseEntity.ok(service.actualizarRol(id, request));
     }
 
     /**
