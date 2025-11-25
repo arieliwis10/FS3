@@ -23,7 +23,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/laboratorios")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200") // 👈 AGREGA ESTO
 public class LaboratorioController {
 
     private final LaboratorioService service;

@@ -65,7 +65,7 @@ public class LaboratorioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Tipo de análisis no encontrado id: " + idTipo));
         log.info("🔗 Asignando tipo {} al laboratorio {}", idTipo, idLab);
         lab.getTiposAnalisis().add(tipo);
-        return labRepo.save(lab); // 👈 ESTA LÍNEA FALTABA
+        return lab;
     }
 
     @Transactional
@@ -75,7 +75,7 @@ public class LaboratorioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Tipo de análisis no encontrado id: " + idTipo));
         log.info("❌ Quitando tipo {} del laboratorio {}", idTipo, idLab);
         lab.getTiposAnalisis().remove(tipo);
-        return labRepo.save(lab); // 👈 ESTA LÍNEA FALTABA
+        return lab;
     }
 
     // ==================== Consultas de apoyo ====================
