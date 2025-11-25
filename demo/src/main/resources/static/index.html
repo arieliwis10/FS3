@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Gestión FS3</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    body {
+      margin: 0 auto;
+      padding: 1.5rem;
+      max-width: 1200px;
+      line-height: 1.5;
+      background: #0d1117;
+      color: #e6edf3;
+    }
+    h1, h2, h3 {
+      margin-top: 1.5rem;
+    }
+    section {
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      background: #161b22;
+    }
+    label {
+      display: block;
+      margin-top: 0.4rem;
+      font-weight: 600;
+    }
+    input, select, button, textarea {
+      margin-top: 0.2rem;
+      padding: 0.45rem;
+      border-radius: 8px;
+      border: 1px solid #30363d;
+      background: #0d1117;
+      color: #e6edf3;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      cursor: pointer;
+      background: linear-gradient(90deg, #2ea043, #238636);
+      border: none;
+      font-weight: 700;
+      color: white;
+    }
+    button.secondary {
+      background: #30363d;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      padding: 0.75rem;
+      border-radius: 8px;
+      max-height: 400px;
+      overflow: auto;
+    }
+    .row {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Panel de Gestión</h1>
+  <p>UI ligera para probar las APIs de usuarios, laboratorios y resultados desde el navegador sin depender de herramientas externas.</p>
+
+  <section>
+    <h2>Configuración</h2>
+    <label for="apiBase">Base API (incluye puerto)</label>
+    <input id="apiBase" type="text" value="http://localhost:8080" />
+  </section>
+
+  <section id="usuarios">
+    <h2>Usuarios</h2>
+    <div class="grid">
+      <form id="user-create">
+        <h3>Crear / Actualizar</h3>
+        <label>ID (solo para actualizar)</label>
+        <input name="id" type="number" min="1" />
+        <label>Nombre</label>
+        <input name="nombre" required />
+        <label>Email</label>
+        <input name="email" type="email" required />
+        <label>Teléfono (+569...)</label>
+        <input name="telefono" />
+        <label>Rol</label>
+        <select name="rol">
+          <option value="ADMIN">ADMIN</option>
+          <option value="ANALISTA">ANALISTA</option>
+        </select>
+        <div class="row" style="margin-top:0.8rem">
+          <button type="submit">Crear</button>
+          <button type="button" class="secondary" id="user-update">Actualizar</button>
+        </div>
+      </form>
+
+      <form id="user-profile">
+        <h3>Actualizar Perfil</h3>
+        <label>ID usuario</label>
+        <input name="id" type="number" min="1" required />
+        <label>Nombre</label>
+        <input name="nombre" />
+        <label>Email</label>
+        <input name="email" type="email" />
+        <label>Teléfono</label>
+        <input name="telefono" />
+        <button type="submit" style="margin-top:0.8rem">Guardar cambios</button>
+      </form>
+
+      <form id="user-role">
+        <h3>Asignar Rol</h3>
+        <label>ID usuario</label>
+        <input name="id" type="number" min="1" required />
+        <label>Rol</label>
+        <select name="rol">
+          <option value="ADMIN">ADMIN</option>
+          <option value="ANALISTA">ANALISTA</option>
+        </select>
+        <button type="submit" style="margin-top:0.8rem">Actualizar Rol</button>
+      </form>
+
+      <div>
+        <h3>Acciones rápidas</h3>
+        <div class="row">
+          <button type="button" id="user-list">Listar usuarios</button>
+          <button type="button" class="secondary" id="user-delete">Eliminar por ID</button>
+        </div>
+        <label style="margin-top:0.8rem">ID objetivo</label>
+        <input id="user-id-action" type="number" min="1" />
+      </div>
+    </div>
+    <h3>Respuesta</h3>
+    <pre id="user-output">Esperando acciones...</pre>
+  </section>
+
+  <section id="laboratorios">
+    <h2>Laboratorios</h2>
+    <div class="grid">
+      <form id="lab-form">
+        <h3>Crear / Actualizar</h3>
+        <label>ID (solo para actualizar)</label>
+        <input name="id" type="number" min="1" />
+        <label>Nombre</label>
+        <input name="nombre" required />
+        <label>Capacidad</label>
+        <input name="capacidad" type="number" min="1" required />
+        <label>Estado</label>
+        <select name="estado">
+          <option value="ACTIVO">ACTIVO</option>
+          <option value="INACTIVO">INACTIVO</option>
+          <option value="MANTENCION">MANTENCION</option>
+        </select>
+        <div class="row" style="margin-top:0.8rem">
+          <button type="submit">Crear</button>
+          <button type="button" class="secondary" id="lab-update">Actualizar</button>
+        </div>
+      </form>
+
+      <div>
+        <h3>Acciones rápidas</h3>
+        <div class="row">
+          <button type="button" id="lab-list">Listar laboratorios</button>
+          <button type="button" class="secondary" id="lab-delete">Eliminar por ID</button>
+        </div>
+        <label style="margin-top:0.8rem">ID objetivo</label>
+        <input id="lab-id-action" type="number" min="1" />
+      </div>
+    </div>
+    <h3>Respuesta</h3>
+    <pre id="lab-output">Esperando acciones...</pre>
+  </section>
+
+  <section id="resultados">
+    <h2>Resultados</h2>
+    <div class="grid">
+      <form id="res-form">
+        <h3>Crear / Actualizar</h3>
+        <label>ID (solo para actualizar)</label>
+        <input name="id" type="number" min="1" />
+        <label>Paciente</label>
+        <input name="paciente" required />
+        <label>Tipo de análisis</label>
+        <input name="tipoAnalisis" required />
+        <label>Fecha de muestra</label>
+        <input name="fechaMuestra" type="date" />
+        <label>Estado</label>
+        <select name="estado">
+          <option value="PENDIENTE">PENDIENTE</option>
+          <option value="EN_PROCESO">EN_PROCESO</option>
+          <option value="COMPLETADO">COMPLETADO</option>
+          <option value="ENTREGADO">ENTREGADO</option>
+        </select>
+        <label>Observaciones</label>
+        <textarea name="observaciones" rows="3"></textarea>
+        <label>ID Laboratorio</label>
+        <input name="laboratorioId" type="number" min="1" required />
+        <label>ID Analista (opcional)</label>
+        <input name="analistaId" type="number" min="1" />
+        <div class="row" style="margin-top:0.8rem">
+          <button type="submit">Crear</button>
+          <button type="button" class="secondary" id="res-update">Actualizar</button>
+        </div>
+      </form>
+
+      <div>
+        <h3>Consultas y eliminación</h3>
+        <div class="row">
+          <button type="button" id="res-list">Listar resultados</button>
+          <button type="button" class="secondary" id="res-delete">Eliminar por ID</button>
+        </div>
+        <label style="margin-top:0.8rem">ID objetivo</label>
+        <input id="res-id-action" type="number" min="1" />
+        <div class="row" style="margin-top:0.8rem">
+          <input id="res-filter-lab" type="number" min="1" placeholder="Laboratorio ID" />
+          <button type="button" class="secondary" id="res-by-lab">Por laboratorio</button>
+        </div>
+        <div class="row" style="margin-top:0.6rem">
+          <input id="res-filter-analista" type="number" min="1" placeholder="Analista ID" />
+          <button type="button" class="secondary" id="res-by-analista">Por analista</button>
+        </div>
+        <div class="row" style="margin-top:0.6rem">
+          <select id="res-filter-estado">
+            <option value="PENDIENTE">PENDIENTE</option>
+            <option value="EN_PROCESO">EN_PROCESO</option>
+            <option value="COMPLETADO">COMPLETADO</option>
+            <option value="ENTREGADO">ENTREGADO</option>
+          </select>
+          <button type="button" class="secondary" id="res-by-estado">Por estado</button>
+        </div>
+      </div>
+    </div>
+    <h3>Respuesta</h3>
+    <pre id="res-output">Esperando acciones...</pre>
+  </section>
+
+  <script>
+    const baseInput = document.getElementById('apiBase');
+    const userOutput = document.getElementById('user-output');
+    const labOutput = document.getElementById('lab-output');
+    const resOutput = document.getElementById('res-output');
+
+    const apiUrl = (path) => `${baseInput.value}${path}`;
+
+    async function request(path, options = {}, outputEl) {
+      try {
+        const res = await fetch(apiUrl(path), {
+          headers: { 'Content-Type': 'application/json' },
+          ...options,
+        });
+        const text = await res.text();
+        let parsed;
+        try { parsed = text ? JSON.parse(text) : null; } catch (_) { parsed = text; }
+        outputEl.textContent = `Status: ${res.status}\n${JSON.stringify(parsed, null, 2)}`;
+      } catch (err) {
+        outputEl.textContent = `Error: ${err.message}`;
+      }
+    }
+
+    // ===== Usuarios =====
+    document.getElementById('user-create').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const body = {
+        nombre: data.nombre,
+        email: data.email,
+        telefono: data.telefono || null,
+        rol: data.rol,
+      };
+      request('/api/usuarios', { method: 'POST', body: JSON.stringify(body) }, userOutput);
+    });
+
+    document.getElementById('user-update').addEventListener('click', () => {
+      const form = document.getElementById('user-create');
+      const data = Object.fromEntries(new FormData(form));
+      if (!data.id) {
+        userOutput.textContent = 'Indica el ID para actualizar.';
+        return;
+      }
+      const body = {
+        nombre: data.nombre,
+        email: data.email,
+        telefono: data.telefono || null,
+        rol: data.rol,
+      };
+      request(`/api/usuarios/${data.id}`, { method: 'PUT', body: JSON.stringify(body) }, userOutput);
+    });
+
+    document.getElementById('user-profile').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const body = {
+        nombre: data.nombre || null,
+        email: data.email || null,
+        telefono: data.telefono || null,
+      };
+      request(`/api/usuarios/${data.id}/perfil`, { method: 'PATCH', body: JSON.stringify(body) }, userOutput);
+    });
+
+    document.getElementById('user-role').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      request(`/api/usuarios/${data.id}/rol`, { method: 'PATCH', body: JSON.stringify({ rol: data.rol }) }, userOutput);
+    });
+
+    document.getElementById('user-list').addEventListener('click', () => {
+      request('/api/usuarios', {}, userOutput);
+    });
+
+    document.getElementById('user-delete').addEventListener('click', () => {
+      const id = document.getElementById('user-id-action').value;
+      if (!id) {
+        userOutput.textContent = 'Indica el ID a eliminar.';
+        return;
+      }
+      request(`/api/usuarios/${id}`, { method: 'DELETE' }, userOutput);
+    });
+
+    // ===== Laboratorios =====
+    document.getElementById('lab-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const body = {
+        nombre: data.nombre,
+        capacidad: Number(data.capacidad),
+        estado: data.estado,
+      };
+      request('/api/laboratorios', { method: 'POST', body: JSON.stringify(body) }, labOutput);
+    });
+
+    document.getElementById('lab-update').addEventListener('click', () => {
+      const form = document.getElementById('lab-form');
+      const data = Object.fromEntries(new FormData(form));
+      if (!data.id) {
+        labOutput.textContent = 'Indica el ID para actualizar.';
+        return;
+      }
+      const body = {
+        nombre: data.nombre,
+        capacidad: Number(data.capacidad),
+        estado: data.estado,
+      };
+      request(`/api/laboratorios/${data.id}`, { method: 'PUT', body: JSON.stringify(body) }, labOutput);
+    });
+
+    document.getElementById('lab-list').addEventListener('click', () => {
+      request('/api/laboratorios', {}, labOutput);
+    });
+
+    document.getElementById('lab-delete').addEventListener('click', () => {
+      const id = document.getElementById('lab-id-action').value;
+      if (!id) {
+        labOutput.textContent = 'Indica el ID a eliminar.';
+        return;
+      }
+      request(`/api/laboratorios/${id}`, { method: 'DELETE' }, labOutput);
+    });
+
+    // ===== Resultados =====
+    const buildResultadoBody = (data) => ({
+      paciente: data.paciente,
+      tipoAnalisis: data.tipoAnalisis,
+      fechaMuestra: data.fechaMuestra || null,
+      estado: data.estado,
+      observaciones: data.observaciones || null,
+      laboratorio: { id: Number(data.laboratorioId) },
+      analista: data.analistaId ? { id: Number(data.analistaId) } : null,
+    });
+
+    document.getElementById('res-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      request('/api/resultados', { method: 'POST', body: JSON.stringify(buildResultadoBody(data)) }, resOutput);
+    });
+
+    document.getElementById('res-update').addEventListener('click', () => {
+      const form = document.getElementById('res-form');
+      const data = Object.fromEntries(new FormData(form));
+      if (!data.id) {
+        resOutput.textContent = 'Indica el ID para actualizar.';
+        return;
+      }
+      request(`/api/resultados/${data.id}`, { method: 'PUT', body: JSON.stringify(buildResultadoBody(data)) }, resOutput);
+    });
+
+    document.getElementById('res-list').addEventListener('click', () => {
+      request('/api/resultados', {}, resOutput);
+    });
+
+    document.getElementById('res-delete').addEventListener('click', () => {
+      const id = document.getElementById('res-id-action').value;
+      if (!id) {
+        resOutput.textContent = 'Indica el ID a eliminar.';
+        return;
+      }
+      request(`/api/resultados/${id}`, { method: 'DELETE' }, resOutput);
+    });
+
+    document.getElementById('res-by-lab').addEventListener('click', () => {
+      const id = document.getElementById('res-filter-lab').value;
+      if (!id) {
+        resOutput.textContent = 'Indica un ID de laboratorio.';
+        return;
+      }
+      request(`/api/resultados/laboratorio/${id}`, {}, resOutput);
+    });
+
+    document.getElementById('res-by-analista').addEventListener('click', () => {
+      const id = document.getElementById('res-filter-analista').value;
+      if (!id) {
+        resOutput.textContent = 'Indica un ID de analista.';
+        return;
+      }
+      request(`/api/resultados/analista/${id}`, {}, resOutput);
+    });
+
+    document.getElementById('res-by-estado').addEventListener('click', () => {
+      const estado = document.getElementById('res-filter-estado').value;
+      request(`/api/resultados/estado/${estado}`, {}, resOutput);
+    });
+  </script>
+</body>
+</html>
