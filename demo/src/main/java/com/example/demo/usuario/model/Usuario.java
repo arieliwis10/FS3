@@ -2,7 +2,9 @@ package com.example.demo.usuario.model;
 
 import jakarta.persistence.*; // JPA: mapeo objeto–relacional
 import jakarta.validation.constraints.*; // Semana 2 → Bean Validation
+import lombok.AllArgsConstructor; // Constructores generados por Lombok
 import lombok.Data; // Lombok: getters/setters/toString
+import lombok.NoArgsConstructor; // Constructor sin argumentos requerido por JPA
 import java.time.LocalDate;
 
 
@@ -21,6 +23,8 @@ import java.time.LocalDate;
  * ===============================================================
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "USUARIO", uniqueConstraints = {
         // 🔸 Opcional (Semana 2): garantía de unicidad de email en BD

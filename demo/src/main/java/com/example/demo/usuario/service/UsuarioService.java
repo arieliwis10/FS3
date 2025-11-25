@@ -1,6 +1,8 @@
 package com.example.demo.usuario.service;
 
 import com.example.demo.exception.ResourceNotFoundException; // ya creada
+import com.example.demo.usuario.dto.ActualizacionPerfilRequest;
+import com.example.demo.usuario.dto.CambioRolRequest;
 import com.example.demo.usuario.model.Usuario;
 import com.example.demo.usuario.repository.UsuarioRepository;
 import lombok.extern.slf4j.Slf4j; // Semana 2 → logging profesional
@@ -100,6 +102,34 @@ public class UsuarioService {
         }
         repository.deleteById(id);
         log.info("✅ Usuario eliminado ID: {}", id);
+    }
+
+    // ============================================================
+    // 🔸 Actualización específica de perfil y rol
+    // ============================================================
+
+    public Usuario actualizarPerfil(Long id, ActualizacionPerfilRequest perfil) {
+        Usuario existente = buscarPorId(id);
+        log.info("👤 Actualizando perfil del usuario {}", id);
+
+        if (!existente.getEmail().equalsIgnoreCase(perfil.getEmail())) {
+            repository.findByEmail(perfil.getEmail()).ifPresent(other -> {
+                log.warn("⚠️ Email ya registrado por otro usuario: {}", perfil.getEmail());
+                throw new IllegalArgumentException("El email ya está registrado por otro usuario");
+            });
+        }
+
+        existente.setNombre(perfil.getNombre());
+        existente.setEmail(perfil.getEmail());
+        existente.setTelefono(perfil.getTelefono());
+        return repository.save(existente);
+    }
+
+    public Usuario actualizarRol(Long id, CambioRolRequest request) {
+        Usuario existente = buscarPorId(id);
+        log.info("🛡️ Actualizando rol del usuario {}", id);
+        existente.setRol(request.getRol());
+        return repository.save(existente);
     }
 
     // ============================================================
