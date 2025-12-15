@@ -37,6 +37,9 @@ public class UsuarioService {
 
     public List<Usuario> listar() {
         log.info("👥 Listando todos los usuarios");
+        log.info("COUNT usuarios: {}", repository.count());
+        log.info("EMAILS: {}", repository.findAll().stream().map(Usuario::getEmail).toList());
+        log.info("COUNT usuarios: {}", repository.count());
         return repository.findAll();
     }
 

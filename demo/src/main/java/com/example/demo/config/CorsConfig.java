@@ -41,21 +41,11 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
 
                 // 1️⃣ Se habilitan todas las rutas que empiecen con "/api/"
-                registry.addMapping("/api/**")
-
-                        // 2️⃣ Se permite el acceso desde cualquier origen
-                        // (útil mientras desarrollamos; luego se puede restringir)
-                        .allowedOrigins("*")
-
-                        // 3️⃣ Métodos HTTP permitidos
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-
-                        // 4️⃣ Cabeceras permitidas
-                        .allowedHeaders("*")
-
-                        // 5️⃣ Si fuera necesario, permitir el envío de credenciales (cookies, tokens,
-                        // etc.)
-                        .allowCredentials(false);
+                    registry.addMapping("/api/**")
+                    .allowedOriginPatterns("http://localhost:4200", "http://127.0.0.1:4200")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(false);
             }
         };
     }
